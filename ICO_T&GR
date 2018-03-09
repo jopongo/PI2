@@ -39,13 +39,13 @@ contract Cellscoin is EIP20Interface {
             _start* 1 minutes>=now* 1 minutes 
             &&_end* 1 minutes>=_start* 1 minutes
             );
-        start=_start* 1 minutes;
-        end=_end* 1 minutes;
-        amountToRaise=_amountToRaise;
+        start=now+_start* 1 minutes;
+        end=_start*1 minutes+_end* 1 minutes;
+        amountToRaise=_amountToRaise * 1 ether;
         owner = msg.sender;
     }
     
-    function () payable{
+    function ()public payable{
         createToken();
     }
     
@@ -63,7 +63,7 @@ contract Cellscoin is EIP20Interface {
         amountRaised=amountRaised.add(msg.value);
     }
     
-    function TimeEnding() public onlyCreator{
+    function TimeEnding() public {
         if(now* 1 minutes>end* 1 minutes)
         {
             hasEnded=true;
@@ -71,7 +71,7 @@ contract Cellscoin is EIP20Interface {
         
     }
     
-    function GoalReached() public  onlyCreator{
+    function GoalReached() public  {
         if(amountRaised>amountToRaise)
         {
             hasPrematurelyEnded=true;
@@ -120,9 +120,8 @@ contract Cellscoin is EIP20Interface {
     event Transfer(address indexed _from, address indexed _to, uint256 _value); 
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
     
-    modifier onlyCreator() {
+    /*modifier onlyCreator() {
         require(msg.sender == owner);
         _;                          
-        } 
+        }*/ 
 }
-
