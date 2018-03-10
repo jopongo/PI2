@@ -20,10 +20,8 @@ contract Cellscoin is EIP20Interface {
     uint public constant decimals = 18;
     
     //Début-Fin Crowdsale
-    //uint public start;
     uint public end;
-    //bool public hasEnded;
-    
+
     //Objectif
     uint public amountToRaise;
     //bool public hasPrematurelyEnded;
@@ -44,8 +42,8 @@ contract Cellscoin is EIP20Interface {
     }
     
     function validPurchase() public view returns (bool) {
-        bool OutPeriod =  now <= end;
-        bool withinInvest = amountRaised>amountToRaise;
+        bool OutPeriod =  now * 1 minutes >= end * 1 minutes; 
+        bool withinInvest = amountRaised>=amountToRaise;
         return OutPeriod && withinInvest;
     }
     
@@ -57,11 +55,9 @@ contract Cellscoin is EIP20Interface {
     function createToken() public payable{
         require(
             msg.value>0
-            && validPurchase()
-            //&& !hasEnded
-            //&& !hasPrematurelyEnded
-            
+            &&end>now
         );
+        require(amountRaised<amountToRaise);
         
         uint256 tokens = msg.value.mul(RATE);
         balances[msg.sender]=balances[msg.sender].add(tokens);
@@ -69,21 +65,7 @@ contract Cellscoin is EIP20Interface {
         amountRaised=amountRaised.add(msg.value);
     }
     
-    /*function TimeEnding() public {
-        if(now* 1 minutes>end* 1 minutes)
-        {
-            hasEnded=true;
-        }
-        
-    }
-    
-    function GoalReached() public  {
-        if(amountRaised>amountToRaise)
-        {
-            hasPrematurelyEnded=true;
-        }
-    }*/
-    
+
     
     function totalSupply() public constant returns (uint256 totalSupply){
         return _totalsupply;
@@ -126,8 +108,5 @@ contract Cellscoin is EIP20Interface {
     event Transfer(address indexed _from, address indexed _to, uint256 _value); 
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
     
-    /*modifier onlyCreator() {
-        require(msg.sender == owner);
-        _;                          
-        }*/ 
+
 }
