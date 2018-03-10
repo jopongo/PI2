@@ -20,13 +20,13 @@ contract Cellscoin is EIP20Interface {
     uint public constant decimals = 18;
     
     //Début-Fin Crowdsale
-    uint public start;
+    //uint public start;
     uint public end;
-    bool public hasEnded;
+    //bool public hasEnded;
     
     //Objectif
     uint public amountToRaise;
-    bool public hasPrematurelyEnded;
+    //bool public hasPrematurelyEnded;
     
     //Somme Totale Crowdsale
     uint public amountRaised;
@@ -34,15 +34,19 @@ contract Cellscoin is EIP20Interface {
     mapping(address=>uint256) balances;
     mapping(address=>mapping(address=>uint256)) allowed;
     
-    function Cellscoin (uint _start, uint _end, uint _amountToRaise)public{
+    function Cellscoin (uint _end, uint _amountToRaise)public{
         require(
-            _start* 1 minutes>=now* 1 minutes 
-            &&_end* 1 minutes>=_start* 1 minutes
+            _end>0
             );
-        start=now+_start* 1 minutes;
-        end=_start*1 minutes+_end* 1 minutes;
+        end=now+_end * 1 minutes;
         amountToRaise=_amountToRaise * 1 ether;
         owner = msg.sender;
+    }
+    
+    function validPurchase() public view returns (bool) {
+        bool OutPeriod =  now <= end;
+        bool withinInvest = amountRaised>amountToRaise;
+        return OutPeriod && withinInvest;
     }
     
     function ()public payable{
@@ -53,8 +57,10 @@ contract Cellscoin is EIP20Interface {
     function createToken() public payable{
         require(
             msg.value>0
-            && !hasEnded
-            && !hasPrematurelyEnded
+            && validPurchase()
+            //&& !hasEnded
+            //&& !hasPrematurelyEnded
+            
         );
         
         uint256 tokens = msg.value.mul(RATE);
@@ -63,7 +69,7 @@ contract Cellscoin is EIP20Interface {
         amountRaised=amountRaised.add(msg.value);
     }
     
-    function TimeEnding() public {
+    /*function TimeEnding() public {
         if(now* 1 minutes>end* 1 minutes)
         {
             hasEnded=true;
@@ -76,7 +82,7 @@ contract Cellscoin is EIP20Interface {
         {
             hasPrematurelyEnded=true;
         }
-    }
+    }*/
     
     
     function totalSupply() public constant returns (uint256 totalSupply){
