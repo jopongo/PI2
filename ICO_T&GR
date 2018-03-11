@@ -48,6 +48,7 @@ contract Cellscoin is EIP20Interface {
     }
     
     function ()public payable{
+        amountRaised=amountRaised.add(msg.value);
         createToken();
     }
     
@@ -57,12 +58,11 @@ contract Cellscoin is EIP20Interface {
             msg.value>0
             &&end>now
         );
-        require(amountRaised<amountToRaise);
+        require(amountRaised<=amountToRaise);
         
         uint256 tokens = msg.value.mul(RATE);
         balances[msg.sender]=balances[msg.sender].add(tokens);
         owner.transfer(msg.value);
-        amountRaised=amountRaised.add(msg.value);
     }
     
 
