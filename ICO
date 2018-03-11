@@ -36,7 +36,7 @@ contract Cellscoin is EIP20Interface {
         end=now+_end * 1 minutes;
         amountToRaise=_amountToRaise * 1 ether;
         owner = msg.sender;
-        balances[msg.sender]=_totalsupply;
+        //balances[msg.sender]=_totalsupply;
     }
     
     
@@ -55,7 +55,7 @@ contract Cellscoin is EIP20Interface {
         
         uint256 tokens = msg.value.mul(RATE);
         balances[msg.sender]=balances[msg.sender].add(tokens);
-        balances[owner]=balances[owner].sub(tokens);
+        //balances[owner]=balances[owner].sub(tokens);
     }
     
 
