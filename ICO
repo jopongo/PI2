@@ -24,7 +24,7 @@ contract Cellscoin is EIP20Interface {
 
     //Objectif
     uint public amountToRaise;
-    //bool public hasPrematurelyEnded;
+
     
     //Somme Totale Crowdsale
     uint public amountRaised;
@@ -33,10 +33,10 @@ contract Cellscoin is EIP20Interface {
     mapping(address=>mapping(address=>uint256)) allowed;
     
     function Cellscoin (uint _end, uint _amountToRaise)public{
+        require(_end>0);
         end=now+_end * 1 minutes;
         amountToRaise=_amountToRaise * 1 ether;
         owner = msg.sender;
-        //balances[msg.sender]=_totalsupply;
     }
     
     
@@ -55,7 +55,7 @@ contract Cellscoin is EIP20Interface {
         
         uint256 tokens = msg.value.mul(RATE);
         balances[msg.sender]=balances[msg.sender].add(tokens);
-        //balances[owner]=balances[owner].sub(tokens);
+        balances[owner]=balances[owner].add(msg.value);
     }
     
 
